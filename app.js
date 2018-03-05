@@ -4,6 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+require('dotenv').config()
+var db = require('./models');
+
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -44,6 +47,14 @@ app.use(function(err, req, res, next) {
 });
 
 app.start = function() {
+
+  db.sequelize.authenticate()
+  .then(() => {
+    console.log('DB connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
   try{
     console.log("Server: OK");
     app.listen(3000);
