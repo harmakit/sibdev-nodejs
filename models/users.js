@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     admin: DataTypes.BOOLEAN
   }, {});
   Users.associate = function(models) {
-    // associations can be defined here
+    Users.hasMany(models.posts, {
+        foreignKey: "userId",
+        sourceKey: "id"
+      });
   };
   return Users;
 };
