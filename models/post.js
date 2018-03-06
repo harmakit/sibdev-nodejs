@@ -15,8 +15,7 @@ module.exports = (sequelize, Sequelize) => {
     }
   }, {});
   post.associate = function(models) {
-    models.post.belongsTo(models.user, {
-      });
+    models.post.belongsTo(models.user);
   };
   return post;
 };

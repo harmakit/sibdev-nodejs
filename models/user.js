@@ -20,8 +20,7 @@ module.exports = (sequelize, Sequelize) => {
     }
   }, {});
   user.associate = function(models) {
-    models.user.belongsTo(models.post, {
-      });
+    models.user.hasMany(models.post);
   };
   return user;
 };
