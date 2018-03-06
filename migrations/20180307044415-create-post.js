@@ -22,7 +22,7 @@ module.exports = {
       },
       userId: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
         references: {
           model: 'users',
           key: 'id'
@@ -36,8 +36,8 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }
-  }),
+    });
+  },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('posts');
   }
