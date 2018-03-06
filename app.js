@@ -1,10 +1,10 @@
+require('dotenv').config()
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-require('dotenv').config()
 var db = require('./models');
 
 
@@ -48,14 +48,15 @@ app.use(function(err, req, res, next) {
 
 app.start = function() {
 
-  db.sequelize.authenticate()
+  /*db.sequelize.authenticate()
   .then(() => {
     console.log('DB connection has been established successfully.');
   })
   .catch(err => {
     console.error('Unable to connect to the database:', err);
-  });
+  });*/
   try{
+    db.sequelize.authenticate()
     console.log("Server: OK");
     app.listen(3000);
   } catch(err) {
