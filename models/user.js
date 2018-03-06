@@ -1,10 +1,23 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, Sequelize) => {
   var user = sequelize.define('user', {
-    email: DataTypes.STRING,
-    passwordHash: DataTypes.STRING,
-    name: DataTypes.STRING,
-    admin: DataTypes.BOOLEAN
+    email: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    passwordHash: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    name: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    admin: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    }
   }, {});
   user.associate = function(models) {
     models.user.belongsTo(models.post, {

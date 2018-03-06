@@ -1,9 +1,18 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, Sequelize) => {
   var post = sequelize.define('post', {
-    title: DataTypes.STRING,
-    text: DataTypes.TEXT,
-    description: DataTypes.TEXT
+    title: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    text: {
+      allowNull: false,
+      type: Sequelize.TEXT
+    },
+    description: {
+      allowNull: false,
+      type: Sequelize.TEXT
+    }
   }, {});
   post.associate = function(models) {
     models.post.belongsTo(models.user, {
