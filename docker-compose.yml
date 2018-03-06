@@ -1,6 +1,15 @@
-version: '2'
+version: '3.1'
+
 services:
-  postgres:
-    image: postgres:9.6.2
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+
+  adminer:
+    image: adminer
+    restart: always
     ports:
-      - 5432:5432
+      - 8080:8080
