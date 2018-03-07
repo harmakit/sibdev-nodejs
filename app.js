@@ -47,10 +47,6 @@ app.use('/users', users);
 app.use('/register', register);
 app.use('/login', login);
 
-app.post('/register', function (req, res) {
-  res.send('Got a POST request');
-});
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
