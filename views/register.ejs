@@ -7,8 +7,15 @@
   </head>
 
   <body class="bg">
-    <div class="container-fluid text-center">
+    <div class="container-fluid text-center ">
         <h2>Create Account</h2>
+
+<% if (locals.error) {%>
+  <div class="alert alert-danger">
+    <%=error%>
+  </div>
+<%}%>
+
     </div>
       <form action="" method="POST">
           <div class="container-fluid">
