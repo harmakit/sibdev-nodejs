@@ -4,10 +4,10 @@ const joi = require('joi');
 
 
 const schema = joi.object().keys({
-  name: joi.string().alphanum().min(3).max(30),
-  password: joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
+  name: joi.string().required().alphanum().min(3).max(30),
+  password: joi.string().required().regex(/^[a-zA-Z0-9]{3,30}$/),
   repassword: joi.string().required().valid(joi.ref('password')),
-  email: joi.string().email()
+  email: joi.string().required().email()
 });
 
 router.post('/', function (req, res) {
@@ -17,6 +17,7 @@ router.post('/', function (req, res) {
     repassword: req.body.repassword,
     email: req.body.email
   }, schema);
+
 
 res.render('register', {
   error: valid.error} )
