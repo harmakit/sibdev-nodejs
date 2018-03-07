@@ -5,16 +5,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
   </head>
-
   <body class="bg">
     <div class="container-fluid text-center ">
-        <h2>Create Account</h2>
-<% if (locals.error) {%>
-  <div class="alert alert-danger">
-    <%=error%>
-  </div>
-<%}%>
-
+      <h2>Create Account</h2>
+      <% if (locals.error) {%>
+        <div class="alert alert-danger">
+          <%=error%>
+        </div>
+      <%}%>
     </div>
       <form action="" method="POST">
           <div class="container-fluid">
