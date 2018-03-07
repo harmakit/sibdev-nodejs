@@ -27,6 +27,7 @@ module.exports = (sequelize, Sequelize) => {
       }
     }
 });
+
   user.prototype.verifyPassword = function(password) {
     return bcrypt.compareSync(password, passwordHash);
   }
