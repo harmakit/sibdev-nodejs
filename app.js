@@ -48,13 +48,6 @@ app.use(function(err, req, res, next) {
 
 app.start = function() {
 
-  /*db.sequelize.authenticate()
-  .then(() => {
-    console.log('DB connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });*/
   try{
     db.sequelize.authenticate()
     console.log("Server: OK");
