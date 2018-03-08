@@ -43,7 +43,7 @@ router.post('/', async function (req, res) {
           password: req.body.password,
           email: req.body.email
         };
-        db.user.create(newUser);
+        await db.user.create(newUser);
         res.render('index');
         return;
       }
