@@ -1,4 +1,6 @@
 'use strict';
+var bcrypt = require('bcrypt');
+
 module.exports = (sequelize, Sequelize) => {
   var user = sequelize.define('user', {
     email: {
@@ -21,7 +23,7 @@ module.exports = (sequelize, Sequelize) => {
   },{
     setterMethods:{
       password: function(value) {
-        var salt = bcrypt.genSaltSync();
+        var salt = bcrypt.genSaltSync(10);
         var hash = bcrypt.hashSync(value, salt);
         this.setDataValue('passwordHash', hash);
       }
