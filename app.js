@@ -8,10 +8,14 @@ var bodyParser = require('body-parser');
 var db = require('./models');
 var passport = require('passport');
 var LocalStrategy  = require('passport-local').Strategy;
+
+//routes:
 var index = require('./routes/index');
 var users = require('./routes/users');
 var register = require('./routes/register');
 var login = require('./routes/login');
+var profile = require('./routes/profile');
+//------
 
 var app = express();
 
@@ -34,7 +38,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err,user){
+  user.findById(id, function(err,user){
     err
       ? done(err)
       : done(null,user);
@@ -45,6 +49,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/register', register);
 app.use('/login', login);
+app.use('/profile', profile);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

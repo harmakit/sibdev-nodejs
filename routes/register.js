@@ -20,34 +20,34 @@ router.post('/', async function (req, res) {
       email: req.body.email
     }, schema);
 
-    var result_email = db.user.findOne({
+    var check_email = await db.user.findOne({
         where: {
           email: req.body.email
         }
       });
 
-    if (await result_email) {
+    if (check_email) {
        res.render('register', {
         error: "User with this email already exists!"} );
       return;
     }
-    else {
-      if (valid.error !== null){
-         res.render('register', {
-          error: valid.error} );
-          return;
-      }
-      else {
-        newUser = {
-          name: req.body.name,
-          password: req.body.password,
-          email: req.body.email
-        };
-        await db.user.create(newUser);
-        res.render('index');
+
+    if (valid.error !== null){
+       res.render('register', {
+        error: valid.error} );
         return;
-      }
     }
+
+    newUser = {
+      name: req.body.name,
+      password: req.body.password,
+      email: req.body.email
+    };
+
+    await db.user.create(newUser);
+    res.render('index');
+    return;
+
   } catch(err){
   console.error(err);
   res.render('register', {

@@ -31,7 +31,7 @@ module.exports = (sequelize, Sequelize) => {
 });
 
   user.prototype.verifyPassword = function(password) {
-    return bcrypt.compareSync(password, passwordHash);
+    return bcrypt.compareSync(password, this.passwordHash);
   }
 
   user.associate = function(models) {
