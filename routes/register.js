@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../models');
-var authController = require('../controllers/authcontroller.js');
+var registerController = require('../controllers/registercontroller.js');
 
-router.post('/', authController.register);
+router.post('/', registerController.register);
 
 router.get('/', function(req, res) {
   req.flash('info', 'Welcome');

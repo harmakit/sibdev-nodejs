@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var db = require('../models');
 var passport = require('passport');
-var authController = require('../controllers/authcontroller.js');
+var loginController = require('../controllers/logincontroller.js');
 
 /*
 router.post('/', passport.authenticate('local', { successRedirect: '/',
@@ -14,7 +14,7 @@ router.post('/', passport.authenticate('local', { successRedirect: '/',
   });
 */
 
-router.post('/', authController.login);
+router.post('/', loginController.login);
 
 router.get('/', function(req, res) {
   req.flash('info', 'Welcome');

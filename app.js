@@ -34,28 +34,20 @@ app.use(flash());
 
 app.use(require('express-session')({
     secret: 'keyboard cat',
-    cookie: { maxAge: 60000 },
-    resave: false,
-    saveUninitialized: false
+    cookie: { maxAge: 60000 }
 }));
-
-
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 
-passport.deserializeUser(async function(id, done) {
-  var result = await db.users.findOne({
-    where: {
-      id: id
-    }
-  })
-done(null, result);
+passport.deserializeUser(function(id, done) {
+  db.user.findById(id, function(err, user) {
+    done(err, user);
+  });
 });
 
 
