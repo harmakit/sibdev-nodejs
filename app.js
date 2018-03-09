@@ -6,8 +6,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var db = require('./models');
+
 var passport = require('passport');
-var LocalStrategy  = require('passport-local').Strategy;
 
 //routes:
 var index = require('./routes/index');
@@ -29,27 +29,39 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+
+app.use(require('express-session')({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}));
+
+
+
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-  user.findById(id, function(err,user){
-    err
-      ? done(err)
-      : done(null,user);
-  });
+passport.deserializeUser(async function(id, done) {
+  var result = await db.users.findOne({
+    where: {
+      id: id
+    }
+  })
+done(null, result);
 });
+
 
 app.use('/', index);
 app.use('/users', users);
 app.use('/register', register);
 app.use('/login', login);
 app.use('/profile', profile);
+//require('./passport/passport')(passport);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
