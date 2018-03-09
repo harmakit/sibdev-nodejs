@@ -6,6 +6,7 @@ var authController = require('../controllers/authcontroller.js');
 router.post('/', authController.register);
 
 router.get('/', function(req, res) {
+  req.flash('info', 'Welcome');
   res.render('register');
 });
 

@@ -22,9 +22,9 @@
 
     <div class="container-fluid text-center ">
       <h2>Create Account</h2>
-      <% if (locals.error) {%>
+      <% if (messages.error) {%>
         <div class="alert alert-danger">
-          <%=error%>
+          <%=messages.error%>
         </div>
       <%}%>
     </div>

@@ -1,11 +1,16 @@
-var db = require('../models'), passportLocalSequelize = require('passport-local-sequelize');
+var db = require('../models');
 const joi = require('joi');
+var passport = require('passport')
+var LocalStrategy = require('passport-local').Strategy;
+
+
+
 
 var exports = module.exports = {}
 
 exports.login = async function (req, res) {
-  try{
 
+  try{
     const schema = joi.object().keys({
       password: joi.string().required().regex(/^[a-zA-Z0-9]{3,30}$/),
       email: joi.string().required().email()
@@ -22,26 +27,23 @@ exports.login = async function (req, res) {
         }
       });
 
-    if (!authUser) {
-
-        res.render('login', {
-          error: "Wrong email!!"} )
-        return;
-
+    if (valid.error !== null){
+      req.flash('error', valid.error);
+      res.render('login');
+      return;
     }
 
-    if (valid.error !== null){
-       res.render('login', {
-        error: valid.error} );
-        return;
+    if (!authUser) {
+      req.flash('error', "Wrong email!!");
+      res.render('login');
+      return;
     }
 
     var check_password = await authUser.verifyPassword(req.body.password);
     if(!check_password){
-
-        res.render('login', {
-          error: "Wrong password!!"} )
-          return;
+      req.flash('error', "Wrong password!!");
+      res.render('login');
+      return;
     }
 
     //auth
@@ -51,11 +53,9 @@ exports.login = async function (req, res) {
     return;
 
   } catch(err){
-
-        res.render('login', {
-          error: err
-        })
-        return;
+      req.flash('error', err);
+      res.render('login')
+      return;
     }
 }
 
@@ -83,16 +83,16 @@ exports.register = async function (req, res) {
         }
       });
 
-    if (check_email) {
-       res.render('register', {
-        error: "User with this email already exists!"} );
+    if (valid.error !== null){
+      req.flash('error', valid.error);
+      res.render('register');
       return;
     }
 
-    if (valid.error !== null){
-       res.render('register', {
-        error: valid.error} );
-        return;
+    if (check_email) {
+      req.flash('error', "User with this email already exists!");
+      res.render('register');
+      return;
     }
 
     newUser = {
@@ -107,7 +107,7 @@ exports.register = async function (req, res) {
 
   } catch(err){
   console.error(err);
-  res.render('register', {
-    error: err} );
+  req.flash('error', err);
+  res.render('register');
  }
 }
