@@ -1,7 +1,6 @@
 var db = require('../models');
 const joi = require('joi');
-var passport = require('passport')
-var LocalStrategy = require('passport-local').Strategy;
+
 
 var exports = module.exports = {}
 
