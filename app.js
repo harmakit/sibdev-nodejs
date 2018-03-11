@@ -10,8 +10,10 @@ var db = require('./models');
 var flash = require('express-flash');
 var session = require('express-session');
 var passport = require('passport');
-var router = require('./router')(express);
-var setupPassport = require('./controllers/setupPassport')(app);
+var router = require('./router')(passport);
+var authPassport = require('./controllers/authPassport')(passport);
+var registerPassport = require('./controllers/registerPassport')(passport);
+
 
 //routes:
 /*
@@ -24,7 +26,7 @@ var profile = require('./routes/profile');
 //------
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,6 +35,8 @@ app.use(flash());
 app.use(cookieParser());
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('express-session')({
   secret: 'mySecretKey',
@@ -40,7 +44,7 @@ app.use(require('express-session')({
   saveUninitialized :  true
 }));
 
-//setupPassport(app);
+//authPassport(app);
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -56,6 +60,7 @@ done(null, result);
 });
 
 app.use('/', router);
+
 
 /*
 app.use('/', index);
