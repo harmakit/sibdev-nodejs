@@ -2,14 +2,15 @@ require('dotenv').config()
 var express = require('express');
 var app = express();
 var path = require('path');
+var passport = require('passport');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var db = require('./models');
 var flash = require('express-flash');
+var cookieSession = require('cookie-session');
 var session = require('express-session');
-var passport = require('passport');
 var router = require('./router')(passport);
 var authPassport = require('./controllers/authPassport')(passport);
 var registerPassport = require('./controllers/registerPassport')(passport);
@@ -33,16 +34,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(flash());
 app.use(cookieParser());
+app.use(cookieSession({secret: 'mySecretKey',
+    resave :  true ,
+    saveUninitialized :  true }));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('express-session')({
-  secret: 'mySecretKey',
-  resave :  true ,
-  saveUninitialized :  true
-}));
+
 
 //authPassport(app);
 
@@ -83,12 +83,12 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var start = async function (){
+var start = function (){
   try{
-    await db.sequelize.authenticate();
-    await db.sequelize.sync();
-    await console.log("Server: OK");
-    await app.listen(3000);
+    db.sequelize.authenticate();
+    db.sequelize.sync();
+    console.log("Server: OK");
+    app.listen(3000);
   } catch(err) {
     console.error(err);
   }

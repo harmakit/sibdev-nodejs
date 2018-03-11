@@ -1,6 +1,7 @@
 var passport = require('passport');
 var registerController = require('./controllers/registerController.js')
 var express = require('express');
+var db = require('./models');
 
 var isAuth = function (req, res, next){
   if (req.isAuthenticated()){
@@ -29,9 +30,14 @@ module.exports = function(passport) {
      })
    });
 
-   router.post("/register", passport.authenticate('register', { successRedirect: '/auth',
-                                      failureRedirect: '/register',
-                                      failureFlash: true }));
+   router.post("/register",
+    passport.authenticate('register', {
+      successRedirect: '/auth',
+      failureRedirect: '/register',
+      failureFlash: true
+    })
+
+  );
 
   router.get('/login',
   isAuth, (req, res) => {
