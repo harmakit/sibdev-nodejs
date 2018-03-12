@@ -23,9 +23,9 @@
 
     <div class="container-fluid text-center">
         <h2>Log In</h2>
-        <% if (messages.error) {%>
+        <% if (messages[0]) {%>
           <div class="alert alert-danger">
-            <%=messages.error%>
+            <%=messages%>
           </div>
         <%}%>
     </div>

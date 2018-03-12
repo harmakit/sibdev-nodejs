@@ -1,13 +1,22 @@
 var express = require('express');
 var router = express.Router();
-var db = require('../models');
 var passport = require('passport');
-var loginController = require('../controllers/logincontroller.js');
 
-router.post('/', loginController.login);
+var isAuth = function (req, res, next){
+  if (req.isAuthenticated()){
+    res.redirect('/');
+  }
+  return next();
+}
 
-router.get('/', function(req, res, next) {
-  res.render('login');
+router.get('/',isAuth, (req, res) => {
+  res.render('login', {
+    messages: req.flash('message')
+  });
 });
+
+router.post('/',passport.authenticate('auth', { successRedirect: '/',
+                                     failureRedirect: '/login',
+                                     failureFlash: true }));
 
 module.exports = router;
