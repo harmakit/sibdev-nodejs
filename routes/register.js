@@ -1,13 +1,23 @@
 var express = require('express');
 var router = express.Router();
-var db = require('../models');
-var registerController = require('../controllers/registercontroller.js');
+var passport = require('passport');
 
-router.post('/', registerController.register);
 
-router.get('/', function(req, res) {
-  req.flash('info', 'Welcome');
-  res.render('register');
+var isAuth = function (req, res, next){
+  if (req.isAuthenticated()){
+    res.redirect('/');
+  }
+  return next();
+}
+
+router.get('/', isAuth, (req, res) => {
+  res.render('register', {
+    messages: req.flash('message')
+  })
 });
+
+router.post('/', passport.authenticate('register', { successRedirect: '/login',
+                                   failureRedirect: '/register',
+                                   failureFlash: true }));
 
 module.exports = router;

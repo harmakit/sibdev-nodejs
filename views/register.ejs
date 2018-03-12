@@ -22,32 +22,32 @@
 
     <div class="container-fluid text-center ">
       <h2>Create Account</h2>
-      <% if (messages.error) {%>
+      <% if (messages[0]) {%>
         <div class="alert alert-danger">
-          <%=messages.error%>
+          <%=messages%>
         </div>
       <%}%>
     </div>
-      <form action="" method="POST">
-          <div class="container-fluid">
-            <div class="form-group">
-              <label>Name:</label>
-              <input type="text" minlength="3" maxlength="30" class="form-control" id="name" placeholder="Enter name" name="name">
-            </div>
-            <div class="form-group">
-              <label>Email:</label>
-              <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
-            </div>
-            <div class="form-group">
-              <label>Password:</label>
-              <input type="password" minlength="6" maxlength="30" class="form-control" id="password" placeholder="Enter password" name="password">
-            </div>
-            <div class="form-group">
-              <label>Re-enter your password:</label>
-              <input type="password" minlength="6" maxlength="30" class="form-control" id="repassword" placeholder="Re-enter password" name="repassword">
-            </div>
-            <button type="submit" class="btn btn-default">Register</button>
+    <form action="" method="POST">
+        <div class="container-fluid">
+          <div class="form-group">
+            <label>Name:</label>
+            <input type="text" minlength="3" maxlength="30" class="form-control" id="username" placeholder="Enter name" name="username">
           </div>
-      </form>
+          <div class="form-group">
+            <label>Email:</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+          </div>
+          <div class="form-group">
+            <label>Password:</label>
+            <input type="password" minlength="6" maxlength="30" class="form-control" id="password" placeholder="Enter password" name="password">
+          </div>
+          <div class="form-group">
+            <label>Re-enter your password:</label>
+            <input type="password" minlength="6" maxlength="30" class="form-control" id="repassword" placeholder="Re-enter password" name="repassword">
+          </div>
+          <button type="submit" class="btn btn-default">Register</button>
+        </div>
+    </form>
   </body>
 </html>
