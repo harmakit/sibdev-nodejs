@@ -26,7 +26,8 @@ module.exports.create = async function (req, res, done) {
     });
 
     var sanitizedText = await sanitizeHtml(req.body.text, {
-      allowedTags: sanitizeHtml.defaults.allowedTags,
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+      allowedAttributes: sanitizeHtml.defaults.allowedAttributes
     });
 
     newPost = {
@@ -47,7 +48,7 @@ module.exports.create = async function (req, res, done) {
     }
 
     if (sanitizedText != req.body.text){
-      await done(null, false, req.flash('message', 'Text allowed tags are: [ h3, h4, h5, h6, blockquote, p, a, ul, ol, nl, li, b, i, strong, em, strike, code, hr, br, div,  table, thead, caption, tbody, tr, th, td, pre ]' ));
+      await done(null, false, req.flash('message', 'Text allowed tags are: [ h3, h4, h5, h6, blockquote, p, a, ul, ol, nl, li, b, i, strong, em, strike, code, hr, br, div,  table, thead, caption, tbody, tr, th, td, pre ] and allowed attributes are: a: [href, name, target], img: [src]' ));
       await res.redirect('/create');
     }
 
