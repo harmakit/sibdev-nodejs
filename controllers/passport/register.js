@@ -1,4 +1,4 @@
-var db = require('../models');
+var db = require('../../models');
 var LocalStrategy = require('passport-local').Strategy;
 var joi = require('joi');
 
@@ -11,10 +11,10 @@ module.exports = function(passport) {
   try {
 
     var schema = joi.object().keys({
-      username: joi.string().required().alphanum().min(3).max(30),
-      password: joi.string().required().regex(/^[a-zA-Z0-9]{3,30}$/),
-      repassword: joi.string().required().valid(joi.ref('password')),
-      email: joi.string().required().email()
+      username: joi.string().alphanum().min(3).max(30).required(),
+      password: joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
+      repassword: joi.string().valid(joi.ref('password')).required(),
+      email: joi.string().email().required()
     });
 
     var valid = await joi.validate({

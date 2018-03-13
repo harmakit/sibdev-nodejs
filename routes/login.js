@@ -9,7 +9,7 @@ var isAuth = function (req, res, next){
   return next();
 }
 
-router.get('/',isAuth, (req, res) => {
+router.get('/',isAuth, function(req, res){
   res.render('login', {
     messages: req.flash('message')
   });

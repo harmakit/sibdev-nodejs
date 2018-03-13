@@ -1,4 +1,4 @@
-var db = require('../models');
+var db = require('../../models');
 var LocalStrategy = require('passport-local').Strategy;
 var joi = require('joi');
 

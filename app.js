@@ -11,8 +11,8 @@ var LocalStrategy = require('passport-local').Strategy;
 var cookieSession = require('cookie-session');
 var cookieParser = require('cookie-parser');
 var routes = require('./router')(passport);
-var auth = require("./passport/auth")(passport);
-var register = require("./passport/register")(passport);
+var auth = require("./controllers/passport/auth")(passport);
+var register = require("./controllers/passport/register")(passport);
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(body_parser.json());
