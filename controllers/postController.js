@@ -36,17 +36,17 @@ module.exports.create = async function (req, res, done) {
       userId: req.user.id
     }
 
-    if (sanitizedTitle == 'Some text'){
+    if (sanitizedTitle != req.body.title){
       await done(null, false, req.flash('message', 'Title allowed tags are: [b, i, em, strong]' ));
       await res.redirect('/create');
     }
 
-    if (sanitizedDescription == 'Some text'){
+    if (sanitizedDescription != req.body.description){
       await done(null, false, req.flash('message', 'Description allowed tags are:[b, i, em, strong]' ));
       await res.redirect('/create');
     }
 
-    if (sanitizedText == 'Some text'){
+    if (sanitizedText != req.body.text){
       await done(null, false, req.flash('message', 'Text allowed tags are: [ h3, h4, h5, h6, blockquote, p, a, ul, ol, nl, li, b, i, strong, em, strike, code, hr, br, div,  table, thead, caption, tbody, tr, th, td, pre ]' ));
       await res.redirect('/create');
     }
