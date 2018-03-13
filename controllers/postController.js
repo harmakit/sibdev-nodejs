@@ -54,13 +54,62 @@ module.exports.create = async function (req, res, done) {
 
     console.log(newPost);
     var result = await db.post.create(newPost);
-    await res.redirect('/post/');
+    await res.redirect('/post/' + req.params.id);
 
   } catch (err){
 
     console.error(err);
     await done(null, false, req.flash('message', err.details[0].message));
     await res.redirect('/create');
+
+  }
+}
+
+module.exports.getPost = async function (req, res) {
+  try{
+
+    var post = await db.post.findOne({
+      include: [{
+        model: db.user
+      }],
+      where: {
+        id: req.params.id
+      }
+    });
+
+    if (!post){
+      await res.redirect('/');
+    }
+    var owner = 0;
+    var admin = 0;
+
+    if (req.isAuthenticated()){
+
+      if (req.user.id == post.userId){
+        owner = 1;
+      };
+      if (req.user.admin == 1){
+        admin = 1;
+      };
+
+      await res.render('postAuth', {
+        post: post,
+        owner: owner,
+        admin: admin
+      });
+    }
+    else{
+      await res.render('post', {
+        post: post,
+        owner: owner,
+        admin: admin
+      });
+    }
+
+  } catch (err){
+
+    console.error(err);
+    await res.redirect('/');
 
   }
 }
