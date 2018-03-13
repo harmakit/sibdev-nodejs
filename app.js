@@ -1,8 +1,10 @@
-require('dotenv').config();
+require('dotenv');
 var express = require("express");
 var app = express();
 var body_parser = require("body-parser");
 var db = require("./models");
+var favicon = require('serve-favicon');
+var path = require('path');
 var flash = require("connect-flash");
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -12,6 +14,7 @@ var routes = require('./router')(passport);
 var auth = require("./passport/auth")(passport);
 var register = require("./passport/register")(passport);
 
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({extended: true}));
 app.set('views', __dirname + '/views');
