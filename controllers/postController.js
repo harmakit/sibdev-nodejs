@@ -235,7 +235,6 @@ module.exports.getPosts = async function (req, res) {
 module.exports.getPostsByUser = async function (req, res) {
   try{
 
-    var my = false;
     var posts = await db.post.findAll({
       include: [{
         model: db.user
@@ -262,12 +261,34 @@ module.exports.getPostsByUser = async function (req, res) {
       req.flash('message', "User has no posts")
     }
 
-    await res.render('author', {
-      my: my,
-      user: user,
-      posts: posts,
-      messages: req.flash('message')
-    });
+    if (req.isAuthenticated()){
+      if (req.params.id == req.user.id){
+        await res.render('authorAuth', {
+          my: true,
+          user: user,
+          posts: posts,
+          messages: req.flash('message')
+        });
+      }
+      else{
+        await res.render('authorAuth', {
+          my: false,
+          user: user,
+          posts: posts,
+          messages: req.flash('message')
+        });
+      }
+
+    }
+    else{
+      await res.render('author', {
+        my: false,
+        user: user,
+        posts: posts,
+        messages: req.flash('message')
+      });
+    }
+
 
   } catch (err){
     console.error(err);
@@ -301,7 +322,8 @@ module.exports.getMyPosts = async function (req, res) {
         req.flash('message', "User has no posts")
       }
 
-      await res.render('author', {
+
+      await res.render('authorAuth', {
         my: my,
         user: req.user,
         posts: posts,

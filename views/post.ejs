@@ -27,7 +27,7 @@
           <%=post.title%>
         </h2>
         <h6>
-          Author: <%=post.user.username%>
+          Author: <a href = /author/<%=post.user.id%>><%=post.user.username%></a>  |  <%=post.createdAt%>
         </h6>
         <h5>
           <%=post.description%>
