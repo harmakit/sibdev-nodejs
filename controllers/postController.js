@@ -39,22 +39,38 @@ module.exports.createPost = async function (req, res, done) {
 
     if (sanitizedTitle != req.body.title){
       await done(null, false, req.flash('message', 'Title allowed tags are: [b, i, em, strong]' ));
-      await res.redirect('/post/new');
+      await res.render('postForm', {
+        messages: req.flash('message'),
+        post: newPost,
+        buttonEdit: false
+      });
+    }
+    else{
+      if (sanitizedDescription != req.body.description){
+        await done(null, false, req.flash('message', 'Description allowed tags are:[b, i, em, strong]' ));
+        await res.render('postForm', {
+          messages: req.flash('message'),
+          post: newPost,
+          buttonEdit: false
+        });
+      }
+      else{
+        if (sanitizedText != req.body.text){
+          await done(null, false, req.flash('message', 'Text allowed tags are: [ h3, h4, h5, h6, blockquote, p, a, ul, ol, nl, li, b, i, strong, em, strike, code, hr, br, div,  table, thead, caption, tbody, tr, th, td, pre ] and allowed attributes are: a: [href, name, target], img: [src]' ));
+          await res.render('postForm', {
+            messages: req.flash('message'),
+            post: newPost,
+            buttonEdit: false
+          });
+        }
+        else{
+          console.log(newPost);
+          var result = await db.post.create(newPost);
+          await res.redirect('/post/' + result.id);
+        }
+      }
     }
 
-    if (sanitizedDescription != req.body.description){
-      await done(null, false, req.flash('message', 'Description allowed tags are:[b, i, em, strong]' ));
-      await res.redirect('/post/new');
-    }
-
-    if (sanitizedText != req.body.text){
-      await done(null, false, req.flash('message', 'Text allowed tags are: [ h3, h4, h5, h6, blockquote, p, a, ul, ol, nl, li, b, i, strong, em, strike, code, hr, br, div,  table, thead, caption, tbody, tr, th, td, pre ] and allowed attributes are: a: [href, name, target], img: [src]' ));
-      await res.redirect('/post/new');
-    }
-
-    console.log(newPost);
-    var result = await db.post.create(newPost);
-    await res.redirect('/post/' + result.id);
 
   } catch (err){
 
@@ -139,13 +155,21 @@ module.exports.getPostForEditing = async function (req, res) {
         if (post){
           await res.render('postForm', {
             messages: req.flash('message'),
-            post: post
+            post: post,
+            buttonEdit: true
           });
         }
+        else{
+          await res.redirect('/');
+        }
+      }
+      else{
+        await res.redirect('/');
       }
     }
-    await res.redirect('/');
-
+    else{
+      await res.redirect('/');
+    }
   } catch (err){
     console.error(err);
     await res.redirect('/');
@@ -172,11 +196,16 @@ module.exports.getPosts = async function (req, res) {
       ]
     });
 
-    if (posts.length == 0){
+    if (posts.length == 0 && page > 1){
       await res.redirect('/');
     }
 
     if (req.isAuthenticated()){
+      if (posts.length == 0){
+        await res.render('indexAuth',{
+          posts: false
+        });
+      }
       await res.render('indexAuth', {
         posts: posts,
         page: page,
@@ -184,6 +213,11 @@ module.exports.getPosts = async function (req, res) {
       });
     }
     else{
+      if (posts.length == 0){
+        await res.render('index',{
+          posts: false
+        });
+      }
       await res.render('index', {
         posts: posts,
         page: page,
@@ -220,11 +254,12 @@ module.exports.getPostsByUser = async function (req, res) {
       }
     });
 
-    if (posts.length == 0){
-      req.flash('message', "User has no posts")
-    }
     if (!user){
       await res.redirect('/');
+    }
+
+    if (posts.length == 0){
+      req.flash('message', "User has no posts")
     }
 
     await res.render('author', {
@@ -354,33 +389,46 @@ module.exports.editPost = async function (req, res, done) {
 
     if (sanitizedTitle != req.body.title){
       await done(null, false, req.flash('message', 'Title allowed tags are: [b, i, em, strong]' ));
-      await res.redirect('/' + req.params.id +'/edit');
+      await res.render('postForm', {
+        messages: req.flash('message'),
+        post: post,
+        buttonEdit: true
+      });
     }
-
-    if (sanitizedDescription != req.body.description){
-      await done(null, false, req.flash('message', 'Description allowed tags are:[b, i, em, strong]' ));
-      await res.redirect('/' + req.params.id +'/edit');
+    else{
+      if (sanitizedDescription != req.body.description){
+        await done(null, false, req.flash('message', 'Description allowed tags are:[b, i, em, strong]' ));
+        await res.render('postForm', {
+          messages: req.flash('message'),
+          post: post,
+          buttonEdit: true
+        });
+      }
+      else{
+        if (sanitizedText != req.body.text){
+          await done(null, false, req.flash('message', 'Text allowed tags are: [ h3, h4, h5, h6, blockquote, p, a, ul, ol, nl, li, b, i, strong, em, strike, code, hr, br, div,  table, thead, caption, tbody, tr, th, td, pre ] and allowed attributes are: a: [href, name, target], img: [src]' ));
+          await res.render('postForm', {
+            messages: req.flash('message'),
+            post: post,
+            buttonEdit: true
+          });
+        }
+        else{
+          await post.update({
+            title: sanitizedTitle,
+            description: sanitizedDescription,
+            text: sanitizedText
+          });
+          await res.redirect('/post/' + post.id);
+        }
+      }
     }
-
-    if (sanitizedText != req.body.text){
-      await done(null, false, req.flash('message', 'Text allowed tags are: [ h3, h4, h5, h6, blockquote, p, a, ul, ol, nl, li, b, i, strong, em, strike, code, hr, br, div,  table, thead, caption, tbody, tr, th, td, pre ] and allowed attributes are: a: [href, name, target], img: [src]' ));
-      await res.redirect('/' + req.params.id +'/edit');
-    }
-
-    await post.update({
-      title: sanitizedTitle,
-      description: sanitizedDescription,
-      text: sanitizedText
-    });
-    await res.redirect('/post/' + post.id);
-
-
 
   } catch (err){
 
     console.error(err);
     await done(null, false, req.flash('message', err.details[0].message));
-    await res.redirect('/' + req.params.id +'/edit');
+    await res.render('/postForm', req.flash('message') );
 
   }
 }

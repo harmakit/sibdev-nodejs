@@ -32,25 +32,29 @@
             </div>
             <div class="text-muted">
               Posted on <%=posts[i].createdAt%> by
-              <a href="/author/<%=posts[0].userId%>"><%=posts[i].user.username%></a>
+              <a href="/author/<%=posts[i].userId%>"><%=posts[i].user.username%></a>
             </div>
           </div>
         </div>
       </br>
       <%}%>
     <%}%>
-    <div class="wrapper">
-        <div class="footer">
-          <ul class="pagination ">
-            <% if (page > 1) {%>
-              <li><a href="/page/<%=page-1%>"> < </a></li>
-            <%}%>
-            <li class="active"><a href="#"> <%=page%> </a></li>
-            <% if (ifMoreThanOneThanForward > 1) {%>
-              <li><a href="/page/<%=page+1%>"> > </a></li>
-            <%}%>
-          </ul>
+
+    <% if (posts) {%>
+        <div class="wrapper">
+            <div class="footer">
+              <ul class="pagination ">
+                <% if (page > 1) {%>
+                  <li><a href="/page/<%=page-1%>"> < </a></li>
+                <%}%>
+                <li class="active"><a href="#"> <%=page%> </a></li>
+                <% if (ifMoreThanOneThanForward > 1) {%>
+                  <li><a href="/page/<%=page+1%>"> > </a></li>
+                <%}%>
+              </ul>
+            </div>
         </div>
-    </div>
+      <%}%>
+
   </body>
 </html>

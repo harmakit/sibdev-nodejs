@@ -8,6 +8,7 @@ router.get('/', function(req, res) {
     res.render('postForm',{
       messages: req.flash('message'),
       post: false,
+      buttonEdit: false,
       user: req.user
     })
   }else{
