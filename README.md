@@ -5,3 +5,4 @@
 * Sequelize
 * EJS
 * Passport.js
+* Sanitize-Html
