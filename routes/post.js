@@ -7,5 +7,6 @@ router.get('/:id', postController.getPost);
 
 router.get('/:id/edit', postController.getPostForEditing);
 router.post('/:id/edit', postController.editPost);
+router.get('/:id/delete', postController.deletePost);
 
 module.exports = router;
