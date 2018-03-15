@@ -117,20 +117,34 @@ module.exports.getPost = async function (req, res) {
 module.exports.getPostForEditing = async function (req, res) {
   try{
 
-    var post = await db.post.findOne({
-      where: {
-        id: req.params.id
+    if (req.isAuthenticated()){
+
+      var post = await db.post.findOne({
+        where: {
+          id: req.params.id
+        }
+      });
+
+      var owner = 0;
+      var admin = 0;
+
+      if (req.user.id == post.userId){
+        owner = 1;
+      };
+      if (req.user.admin == 1){
+        admin = 1;
+      };
+
+      if (owner || admin){
+        if (post){
+          await res.render('postForm', {
+            messages: req.flash('message'),
+            post: post
+          });
+        }
       }
-    });
-
-    if (!post){
-      await res.redirect('/');
     }
-
-    await res.render('postForm', {
-      messages: req.flash('message'),
-      post: post
-    });
+    await res.redirect('/');
 
   } catch (err){
     console.error(err);
@@ -163,7 +177,6 @@ module.exports.getPosts = async function (req, res) {
     }
 
     if (req.isAuthenticated()){
-
       await res.render('indexAuth', {
         posts: posts,
         page: page,
@@ -289,17 +302,10 @@ module.exports.deletePost = async function (req, res) {
       };
 
       if (owner || admin){
-        await db.post.destroy({
-          where: {
-            id: req.params.id
-          }
-        });
-        await res.redirect('/');
-      }
-      else{
-        await res.redirect('/');
+        await post.destroy();
       }
     }
+    await res.redirect('/');
 
   } catch (err){
     console.error(err);
