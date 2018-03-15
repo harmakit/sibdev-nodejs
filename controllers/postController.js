@@ -26,8 +26,11 @@ module.exports.createPost = async function (req, res, done) {
     });
 
     var sanitizedText = await sanitizeHtml(req.body.text, {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
-      allowedAttributes: sanitizeHtml.defaults.allowedAttributes
+      allowedTags: ['p', 'b', 'i', 'em', 'strong', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'b', 'i', 'blockquote', 'pre', 'a'],
+      allowedAttributes: {
+        a: [ 'href'],
+        img: [ 'src', 'alt' ]
+      }
     });
 
     newPost = {
@@ -56,7 +59,7 @@ module.exports.createPost = async function (req, res, done) {
       }
       else{
         if (sanitizedText != req.body.text){
-          await done(null, false, req.flash('message', 'Text allowed tags are: [ h3, h4, h5, h6, blockquote, p, a, ul, ol, nl, li, b, i, strong, em, strike, code, hr, br, div,  table, thead, caption, tbody, tr, th, td, pre ] and allowed attributes are: a: [href, name, target], img: [src]' ));
+          await done(null, false, req.flash('message', 'Text allowed tags are: [ p,b, i, em, strong, h1-h6, img, b, i, blockquote, pre, a] and allowed attributes are: a: [href], img: [src, alt]' ));
           await res.render('postForm', {
             messages: req.flash('message'),
             post: newPost,
@@ -405,8 +408,11 @@ module.exports.editPost = async function (req, res, done) {
     });
 
     var sanitizedText = await sanitizeHtml(req.body.text, {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
-      allowedAttributes: sanitizeHtml.defaults.allowedAttributes
+      allowedTags: ['p', 'b', 'i', 'em', 'strong', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'b', 'i', 'blockquote', 'pre', 'a'],
+      allowedAttributes: {
+        a: [ 'href'],
+        img: [ 'src', 'alt' ]
+      }
     });
 
     if (sanitizedTitle != req.body.title){
@@ -428,7 +434,7 @@ module.exports.editPost = async function (req, res, done) {
       }
       else{
         if (sanitizedText != req.body.text){
-          await done(null, false, req.flash('message', 'Text allowed tags are: [ h3, h4, h5, h6, blockquote, p, a, ul, ol, nl, li, b, i, strong, em, strike, code, hr, br, div,  table, thead, caption, tbody, tr, th, td, pre ] and allowed attributes are: a: [href, name, target], img: [src]' ));
+          await done(null, false, req.flash('message', 'Text allowed tags are: [ p,b, i, em, strong, h1-h6, img, b, i, blockquote, pre, a] and allowed attributes are: a: [href], img: [src, alt]' ));
           await res.render('postForm', {
             messages: req.flash('message'),
             post: post,
