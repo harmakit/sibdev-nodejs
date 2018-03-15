@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Profile</title>
+    <title>Post</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
   </head>
@@ -15,7 +15,7 @@
         <ul class="nav navbar-nav">
           <li><a href="/">Home</a></li>
           <li><a href="/profile">Profile</a></li>
-          <li class="active"><a href="/post/new">Create post</a></li>
+          <li <%if(!post){%>class="active"<%}%>><a href="/post/new">Create post</a></li>
           <li><a href="/logout">Logout</a></li>
         </ul>
       </div>
@@ -34,17 +34,20 @@
           <div class="container-fluid">
             <div class="form-group">
               <label for="title">Title</label>
-              <input class="form-control" id="title" name="title" placeholder="(0/150)" type="text">
+              <input class="form-control" id="title" name="title" placeholder="(0/150)" type="text"
+                <% if (post) {%> value="<%=post.title%>"  <%}%>
+              >
+
             </div>
             <div class="form-group">
               <label for="description">Description</label>
-              <textarea class="form-control" rows="3" id="description" name="description" placeholder="(0/300)"></textarea>
+              <textarea class="form-control" rows="3" id="description" name="description" placeholder="(0/300)"><%if(post){%><%=post.description%><%}%></textarea>
             </div>
             <div class="form-group">
               <label for="text">Text:</label>
-              <textarea class="form-control" rows="10" id="text" name="text" placeholder="(0/1000)"></textarea>
+              <textarea class="form-control" rows="10" id="text" name="text" placeholder="(0/1000)"><%if(post){%><%=post.text%><%}%></textarea>
             </div>
-            <button type="submit" class="btn btn-default">Post</button>
+            <button type="submit" class="btn btn-default"><%if(post){%>Edit<%}else{%>Post<%}%></button>
           </div>
       </form>
     </div>

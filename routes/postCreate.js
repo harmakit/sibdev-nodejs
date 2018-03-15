@@ -5,8 +5,9 @@ var postController = require('../controllers/postController');
 
 router.get('/', function(req, res) {
     if(req.isAuthenticated()){
-    res.render('postNew',{
+    res.render('postForm',{
       messages: req.flash('message'),
+      post: false,
       user: req.user
     })
   }else{
@@ -14,7 +15,6 @@ router.get('/', function(req, res) {
   }
 });
 
-router.post('/', postController.create);
-
+router.post('/', postController.createPost);
 
 module.exports = router;

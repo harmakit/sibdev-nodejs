@@ -6,7 +6,7 @@ var register = require('./routes/register');
 var login = require('./routes/login');
 var profile = require('./routes/profile');
 var logout = require('./routes/logout');
-var postNew = require('./routes/postNew');
+var postCreate = require('./routes/postCreate');
 var post = require('./routes/post');
 
 
@@ -17,7 +17,7 @@ module.exports = function (passport) {
   router.use('/login', login);
   router.use('/profile', profile);
   router.use('/logout', logout);
-  router.use('/post/new', postNew);
+  router.use('/post/new', postCreate);
   router.use('/post', post);
 
 

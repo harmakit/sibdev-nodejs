@@ -2,7 +2,7 @@ var sanitizeHtml = require('sanitize-html');
 var db = require('../models');
 var joi = require('joi');
 
-module.exports.create = async function (req, res, done) {
+module.exports.createPost = async function (req, res, done) {
   try{
 
     var schema = joi.object().keys({
@@ -114,6 +114,30 @@ module.exports.getPost = async function (req, res) {
   }
 }
 
+module.exports.getPostForEditing = async function (req, res) {
+  try{
+
+    var post = await db.post.findOne({
+      where: {
+        id: req.params.id
+      }
+    });
+
+    if (!post){
+      await res.redirect('/');
+    }
+
+    await res.render('postForm', {
+      messages: req.flash('message'),
+      post: post
+    });
+
+  } catch (err){
+    console.error(err);
+    await res.redirect('/');
+  }
+}
+
 module.exports.getPosts = async function (req, res) {
   try{
 
@@ -128,7 +152,10 @@ module.exports.getPosts = async function (req, res) {
         model: db.user
       }],
       limit: limit,
-      offset: offset
+      offset: offset,
+      order: [
+        ['createdAt']
+      ]
     });
 
     if (posts.length == 0){
@@ -154,6 +181,95 @@ module.exports.getPosts = async function (req, res) {
   } catch (err){
     console.error(err);
     await res.redirect('/');
+
+  }
+}
+
+module.exports.deletePost = async function (req, res) {
+  try{
+
+    await db.post.destroy({
+      where: {
+        id: req.params.id
+      }
+    });
+    await res.redirect('/');
+
+  } catch (err){
+    console.error(err);
+    await res.redirect('/');
+
+  }
+}
+
+module.exports.editPost = async function (req, res, done) {
+
+  try{
+
+    var post = await db.post.findOne({
+      where: {
+        id: req.params.id
+      }
+    });
+
+    if (!post){
+      await res.redirect('/');
+    }
+
+    var schema = joi.object().keys({
+      title: joi.string().min(10).max(150).required(),
+      description: joi.string().min(10).max(300).required(),
+      text: joi.string().min(10).max(1000).required()
+    });
+
+    var valid = await joi.validate({
+      title: req.body.title,
+      description: req.body.description,
+      text: req.body.text,
+    }, schema);
+
+    var sanitizedTitle = await sanitizeHtml(req.body.title, {
+      allowedTags: [ 'b', 'i', 'em', 'strong' ]
+    });
+
+    var sanitizedDescription = await sanitizeHtml(req.body.description, {
+      allowedTags: [ 'b', 'i', 'em', 'strong' ]
+    });
+
+    var sanitizedText = await sanitizeHtml(req.body.text, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+      allowedAttributes: sanitizeHtml.defaults.allowedAttributes
+    });
+
+    if (sanitizedTitle != req.body.title){
+      await done(null, false, req.flash('message', 'Title allowed tags are: [b, i, em, strong]' ));
+      await res.redirect('/' + req.params.id +'/edit');
+    }
+
+    if (sanitizedDescription != req.body.description){
+      await done(null, false, req.flash('message', 'Description allowed tags are:[b, i, em, strong]' ));
+      await res.redirect('/' + req.params.id +'/edit');
+    }
+
+    if (sanitizedText != req.body.text){
+      await done(null, false, req.flash('message', 'Text allowed tags are: [ h3, h4, h5, h6, blockquote, p, a, ul, ol, nl, li, b, i, strong, em, strike, code, hr, br, div,  table, thead, caption, tbody, tr, th, td, pre ] and allowed attributes are: a: [href, name, target], img: [src]' ));
+      await res.redirect('/' + req.params.id +'/edit');
+    }
+
+    await post.update({
+      title: sanitizedTitle,
+      description: sanitizedDescription,
+      text: sanitizedText
+    });
+    await res.redirect('/post/' + post.id);
+
+
+
+  } catch (err){
+
+    console.error(err);
+    await done(null, false, req.flash('message', err.details[0].message));
+    await res.redirect('/' + req.params.id +'/edit');
 
   }
 }
