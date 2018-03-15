@@ -29,7 +29,8 @@ module.exports.createPost = async function (req, res, done) {
       allowedTags: ['p', 'b', 'i', 'em', 'strong', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'b', 'i', 'blockquote', 'pre', 'a'],
       allowedAttributes: {
         a: [ 'href'],
-        img: [ 'src', 'alt' ]
+        img: [ 'src', 'alt' ],
+        selfClosing: [ 'img']
       }
     });
 
@@ -412,7 +413,8 @@ module.exports.editPost = async function (req, res, done) {
       allowedAttributes: {
         a: [ 'href'],
         img: [ 'src', 'alt' ]
-      }
+      },
+      selfClosing: [ 'img']
     });
 
     if (sanitizedTitle != req.body.title){
