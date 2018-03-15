@@ -49,7 +49,7 @@ app.start = function() {
     db.sequelize.authenticate();
     db.sequelize.sync();
     console.log("Server: OK");
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
   } catch(err) {
     console.error(err);
   }
