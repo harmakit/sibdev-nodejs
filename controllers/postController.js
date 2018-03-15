@@ -185,20 +185,125 @@ module.exports.getPosts = async function (req, res) {
   }
 }
 
-module.exports.deletePost = async function (req, res) {
+module.exports.getPostsByUser = async function (req, res) {
   try{
 
-    await db.post.destroy({
+    var my = false;
+    var posts = await db.post.findAll({
+      include: [{
+        model: db.user
+      }],
+      where: {
+        userId: req.params.id
+      },
+      order: [
+        ['createdAt']
+      ]
+    });
+
+    var user = await db.user.findOne({
       where: {
         id: req.params.id
       }
     });
-    await res.redirect('/');
+
+    if (posts.length == 0){
+      req.flash('message', "User has no posts")
+    }
+    if (!user){
+      await res.redirect('/');
+    }
+
+    await res.render('author', {
+      my: my,
+      user: user,
+      posts: posts,
+      messages: req.flash('message')
+    });
 
   } catch (err){
     console.error(err);
     await res.redirect('/');
 
+  }
+}
+
+module.exports.getMyPosts = async function (req, res) {
+  try{
+
+    var my = true;
+    if (!req.isAuthenticated()){
+      await res.redirect('/');
+    }
+    else{
+
+      var posts = await db.post.findAll({
+        include: [{
+          model: db.user
+        }],
+        order: [
+          ['createdAt']
+        ],
+        where: {
+          userId: req.user.id
+        }
+      });
+
+      if (posts.length == 0){
+        req.flash('message', "User has no posts")
+      }
+
+      await res.render('author', {
+        my: my,
+        user: req.user,
+        posts: posts,
+        messages: req.flash('message')
+      });
+    }
+  } catch (err){
+    console.error(err);
+    await res.redirect('/');
+
+  }
+}
+
+module.exports.deletePost = async function (req, res) {
+  try{
+
+    if (req.isAuthenticated()){
+
+      var post = await db.post.findOne({
+        where: {
+          id: req.params.id
+        }
+      });
+
+      var owner = 0;
+      var admin = 0;
+
+      if (req.user.id == post.userId){
+        owner = 1;
+      };
+      if (req.user.admin == 1){
+        admin = 1;
+      };
+
+      if (owner || admin){
+        await db.post.destroy({
+          where: {
+            id: req.params.id
+          }
+        });
+        await res.redirect('/');
+      }
+      else{
+        await res.redirect('/');
+      }
+    }
+
+  } catch (err){
+    console.error(err);
+    await res.redirect('/');
   }
 }
 
