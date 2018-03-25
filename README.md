@@ -11,7 +11,7 @@
 # starting an app:
 `npm install`
 
-create `.env` file with `DATABASE_URL=postgres://postgres@localhost/blog`
+create `.env` file in project directory with `DATABASE_URL=postgres://postgres@localhost/blog`
 
 `docker-compose up`
 
